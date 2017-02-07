@@ -1,9 +1,22 @@
-void setup() {
-  // put your setup code here, to run once:
+#include <Flightdata.h>
+#include <Bme280.h>
 
+Flightdata flightdata; 
+
+Bme280 bme280;
+
+void setup() {
+	bme280.init();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+	unsigned long time = millis();
+
+	if (!flightdata.isOnGround()) {
+		bme280.flightProcess(time);
+	}
+	else {
+		bme280.groundProcess();
+	}
 
 }
