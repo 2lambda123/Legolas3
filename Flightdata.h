@@ -1,3 +1,5 @@
+#pragma once
+
 #define OKAY			0
 #define ERR_GENERAL		1
 
@@ -17,23 +19,25 @@ public:
 		return fHum;
 	}
 
-	void setTemp(double temp) {
+	void setTemp(float temp) {
 		fTemp = temp;
 	}
-	void setPres(double pres) {
+	void setPres(float pres) {
 		fPres = pres;
 	}
-	void setAlt() {
+	void setAlt(float alt) {
 		fAlt = alt;
 	}
-	void setHum(double hum) {
+	void setHum(float hum) {
 		fHum = hum;
 	}
 
 	//////////SYSTEM STATE//////////
 	bool isOnGround() {
 		return false;
-		//!!! add logic later
+		//!!! add logic later, maybe it makes sense to have an isOnGround bool that is periodically
+		//updated rather than going through the logic each iteration. Is on ground can be checked once
+		//every 10 seconds or so
 	}
 
 	//////////SUBSYSTEM STATUS//////////
@@ -53,4 +57,4 @@ private:
 
 	//////////SUBSYSTEM STATUS//////////
 	int Bme280Status = 0;
-}
+};

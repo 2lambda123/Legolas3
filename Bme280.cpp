@@ -1,21 +1,21 @@
-#include <Bme280.h>
+#include "Bme280.h"
 #include <Adafruit_BME280.h> //BME280 library
 
 #define SEALEVELPRESSURE_HPA (1013.25)
 
 Adafruit_BME280 bme;
 
-void init() {
+void Bme280::init() {
 	return;
 }
 
-void test() {
+void Bme280::test() {
 	return;
 }
 
-void flightProcess (&flightData, unsigned long time) {
-	if (time >= totalDeltaTime) { //!!! how to deal with members?
-		totalDeltaTime += deltaTimeFlight
+void Bme280::flightProcess (Flightdata& flightData, unsigned long time) {
+	if (time >= totalDeltaTime) { 
+		totalDeltaTime += deltaTimeFlight;
 
 		if (!bme.begin()) {
 			flightData.setBme280Status(1);
@@ -25,16 +25,16 @@ void flightProcess (&flightData, unsigned long time) {
 			flightData.setBme280Status(0);
 		}
 
-		flightData.setTemp(bme.readTemperature()); //!!! flightData.method okay for how it's passed in?
+		flightData.setTemp(bme.readTemperature());
 		flightData.setPres(bme.readPressure());
 		flightData.setAlt(bme.readAltitude(SEALEVELPRESSURE_HPA));
 		flightData.setHum(bme.readHumidity());
 	}
 }
 
-void groundProcess (&flightData, unsigned long time) {
-	if (time >= totalDeltaTime) { //!!! again, how to deal with members
-		totalDeltaTime += deltaTimeGround
+void Bme280::groundProcess (Flightdata& flightData, unsigned long time) {
+	if (time >= totalDeltaTime) {
+		totalDeltaTime += deltaTimeGround;
 
 		if (!bme.begin()) {
 			flightData.setBme280Status(1);
@@ -44,9 +44,13 @@ void groundProcess (&flightData, unsigned long time) {
 			flightData.setBme280Status(0);
 		}
 
-		flightData.setTemp(bme.readTemperature()); //!!! same as above in flightProcess
+		flightData.setTemp(bme.readTemperature()); 
 		flightData.setPres(bme.readPressure());
 		flightData.setAlt(bme.readAltitude(SEALEVELPRESSURE_HPA));
 		flightData.setHum(bme.readHumidity());
 	}
+}
+
+void Bme280::teardown() {
+	return;
 }
