@@ -6,23 +6,18 @@ Flightdata flightdata;
 Bme280 bme280;
 
 void setup() {
-  Serial.begin(9600);
+	Serial.begin(9600);
 	bme280.init();
 }
 
 void loop() {
-	unsigned long time = millis();
+	unsigned long currTime = millis();
 
 	if (!flightdata.isOnGround()) {
-    Serial.println(flightdata.getTemp());
-    Serial.println(flightdata.getAlt());
-    Serial.println(flightdata.getPres());
-    Serial.println(flightdata.getHum());
-    Serial.println(flightdata.getBme280Status());
-		bme280.flightProcess(flightdata, time);
+		bme280.flightProcess(flightdata, currTime);
 	}
 	else {
-		bme280.groundProcess(flightdata, time);
+		bme280.groundProcess(flightdata, currTime);
 	}
 
 }

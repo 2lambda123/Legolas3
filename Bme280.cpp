@@ -1,8 +1,6 @@
 #include "Bme280.h"
 #include <Adafruit_BME280.h> //BME280 library
 
-#define SEALEVELPRESSURE_HPA (1013.25)
-
 Adafruit_BME280 bme;
 
 void Bme280::init() {
@@ -13,44 +11,43 @@ void Bme280::test() {
 	return;
 }
 
-void Bme280::flightProcess (Flightdata& flightData, unsigned long time) {
-	if (time >= totalDeltaTime) { 
-		totalDeltaTime += deltaTimeFlight;
+void Bme280::flightProcess (Flightdata& flightdata, unsigned long currTime) {
+	if ((lastActionTime + deltaTimeFlight) <= currTime) { 
+		lastActionTime = currTime;
 
-		if (!bme.begin()) {
-			flightData.setBme280Status(1);
-			return;
-		}
-		else {
-			flightData.setBme280Status(0);
-		}
+		process(flightdata);
 
-		flightData.setTemp(bme.readTemperature());
-		flightData.setPres(bme.readPressure());
-		flightData.setAlt(bme.readAltitude(SEALEVELPRESSURE_HPA));
-		flightData.setHum(bme.readHumidity());
+    	//debug messages
+	    Serial.println(flightdata.getTemp());
+	    Serial.println(flightdata.getAlt());
+	    Serial.println(flightdata.getPres());
+	    Serial.println(flightdata.getHum());
+	    Serial.println(flightdata.getBme280Status());
 	}
 }
 
-void Bme280::groundProcess (Flightdata& flightData, unsigned long time) {
-	if (time >= totalDeltaTime) {
-		totalDeltaTime += deltaTimeGround;
+void Bme280::groundProcess (Flightdata& flightdata, unsigned long currTime) {
+	if ((lastActionTime + deltaTimeGround) <= currTime) {
+		lastActionTime = currTime;
 
-		if (!bme.begin()) {
-			flightData.setBme280Status(1);
-			return;
-		}
-		else {
-			flightData.setBme280Status(0);
-		}
-
-		flightData.setTemp(bme.readTemperature()); 
-		flightData.setPres(bme.readPressure());
-		flightData.setAlt(bme.readAltitude(SEALEVELPRESSURE_HPA));
-		flightData.setHum(bme.readHumidity());
+		process(flightdata);
 	}
 }
 
 void Bme280::teardown() {
 	return;
+}
+
+void Bme280::process(Flightdata& flightdata) {
+	if (!bme.begin()) {
+		flightdata.setBme280Status(1);
+		return;
+	}
+	else {
+		flightdata.setBme280Status(0);
+	}
+	flightdata.setTemp(bme.readTemperature());
+	flightdata.setPres(bme.readPressure());
+	flightdata.setAlt(bme.readAltitude(SEALEVELPRESSURE_HPA));
+	flightdata.setHum(bme.readHumidity());
 }
