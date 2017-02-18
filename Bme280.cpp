@@ -12,22 +12,19 @@ void Bme280::test() {
 }
 
 void Bme280::flightProcess (Flightdata& flightdata, unsigned long currTime) {
-	if ((lastActionTime + deltaTimeFlight) <= currTime) { 
+	if ((lastActionTime + deltaTimeFlightBme) <= currTime) { 
 		lastActionTime = currTime;
 
 		process(flightdata);
 
     	//debug messages
-	    Serial.println(flightdata.getTemp());
-	    Serial.println(flightdata.getAlt());
-	    Serial.println(flightdata.getPres());
-	    Serial.println(flightdata.getHum());
-	    Serial.println(flightdata.getBme280Status());
+		Serial.print("Bme280.flightProcess complete, status ");
+		Serial.println(flightdata.getBme280Status());
 	}
 }
 
 void Bme280::groundProcess (Flightdata& flightdata, unsigned long currTime) {
-	if ((lastActionTime + deltaTimeGround) <= currTime) {
+	if ((lastActionTime + deltaTimeGroundBme) <= currTime) {
 		lastActionTime = currTime;
 
 		process(flightdata);

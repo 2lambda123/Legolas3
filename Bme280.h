@@ -6,8 +6,8 @@
 
 #define SEALEVELPRESSURE_HPA (1013.25)
 
-const unsigned long deltaTimeFlight = 1000; 
-const unsigned long deltaTimeGround = 10000;
+const unsigned long deltaTimeFlightBme = 1000; 
+const unsigned long deltaTimeGroundBme = 10000;
 
 class Bme280:Subsystem {
 public:

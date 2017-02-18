@@ -44,9 +44,15 @@ public:
 	int getBme280Status() {
 		return Bme280Status;
 	}
+	int getComStatus() {
+		return comStatus;
+	}
 
 	void setBme280Status(int status) {
 		Bme280Status = status;
+	}
+	int setComStatus(int status) {
+		comStatus = status;
 	}
 private:
 	//////////SENSOR DATA//////////
@@ -57,4 +63,5 @@ private:
 
 	//////////SUBSYSTEM STATUS//////////
 	int Bme280Status = 0;
+	int comStatus = 0;
 };
