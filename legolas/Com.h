@@ -5,7 +5,7 @@
 #include <IridiumSBD.h> 
 
 
-const unsigned long deltaTimeFlightCom = 180000; 
+const unsigned long deltaTimeFlightCom = 60000; 
 const unsigned long deltaTimeGroundCom = 1000000;
 
 class Com:Subsystem {
@@ -18,5 +18,4 @@ public:
 private:
 	int signalQuality = -1;
 	unsigned long lastActionTime = 0;
-	char flightdataToChar(Flightdata& flightdata, unsigned long currTime);
 };

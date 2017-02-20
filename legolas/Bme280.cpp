@@ -20,6 +20,8 @@ void Bme280::flightProcess (Flightdata& flightdata, unsigned long currTime) {
     	//debug messages
 		Serial.print("Bme280.flightProcess complete, status ");
 		Serial.println(flightdata.getBme280Status());
+    Serial.println(flightdata.getAlt());
+    Serial.println(flightdata.getTemp());
 	}
 }
 

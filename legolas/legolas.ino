@@ -18,7 +18,7 @@ void loop() {
 
 	if (!flightdata.isOnGround()) {
 		bme280.flightProcess(flightdata, currTime);
-   		com.flightProcess(flightdata, currTime); //DANGER, THIS SENDS A MESSAGE!
+   	com.flightProcess(flightdata, currTime); //DANGER, THIS SENDS A MESSAGE!
 	}
 	else {
 		bme280.groundProcess(flightdata, currTime);
