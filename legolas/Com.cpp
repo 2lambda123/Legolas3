@@ -26,42 +26,14 @@ void Com::flightProcess(Flightdata& flightdata, unsigned long currTime) {
 		char telemetry[340]; //max Iridium send size
 		snprintf(telemetry, sizeof(telemetry), "Temp: %s\nPres: %s\nAlt:  %s\nHum:  %s\nBME280: %d\nCom: %d\n", 
 				temp, pres, alt, hum, flightdata.getBme280Status(), flightdata.getComStatus());
-		IridiumSBD isbd(Serial1, 30); //sleep pin 30
-		Serial1.begin(19200);
-    
-		isbd.attachConsole(Serial);
-		isbd.setPowerProfile(1);
-		isbd.setMinimumSignalQuality(1);
-		isbd.begin();
 
-		int err = isbd.getSignalQuality(signalQuality);
-		if (err != 0) {
-			flightdata.setComStatus(1);
-			Serial.print("Com.flightProcess error, Iridium code ");
-			Serial.print(err);
-			Serial.print(" status ");
-			Serial.println(flightdata.getComStatus());
-			return;
-		}
-		Serial.print("Signal quality: ");
-		Serial.println(signalQuality); //!!! low signal quality doesn't stop it from sending?
-
-		err = isbd.sendSBDText(telemetry);
-		if (err != 0) {
-			flightdata.setComStatus(1);
-			Serial.print("Com.flightProcess error, Iridium code ");
-			Serial.print(err);
-			Serial.print(" status ");
-			Serial.println(flightdata.getComStatus());
-			return;
-		}
-
-		Serial.println("Send success!");
-
-		flightdata.setComStatus(0);
-		Serial.print("Com.flightProcess complete, status ");
-		Serial.println(flightdata.getComStatus()); 
-		
+        int success = sendToCom(telemetry);
+        if (success == 0) {
+            flightdata.setComStatus(0);
+        }
+        else {
+            flightdata.setComStatus(1);
+        }
 	}
 
 }
@@ -72,4 +44,23 @@ void Com::groundProcess() {
 
 void Com::teardown() {
 	return;
+}
+
+int Com::sendToCom(char* telemetry) {
+    Serial1.begin(115200);
+    Serial1.write(HELLO);
+
+    while (true) { //!!! DANGER DANGER VERY SCARY BAD CHANGE THIS SOON
+        switch (Serial1.read()) {
+            case READY:
+                Serial1.write(telemetry);
+                break;
+            case SUCCESS:
+                return 0;
+            case FAILURE:
+                return 1;
+        }
+        delay(5);
+    }
+
 }

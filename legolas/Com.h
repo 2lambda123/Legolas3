@@ -1,5 +1,12 @@
 #pragma once
 
+#define HELLO       			0x80
+#define MSG_WAITING 			0X81
+#define READY       			0x82
+#define TERMINATOR  			0x83
+#define SUCCESS   				0x84
+#define FAILURE					0x85
+
 #include "Subsystem.h"
 #include "Flightdata.h"
 #include <IridiumSBD.h> 
@@ -18,4 +25,5 @@ public:
 private:
 	int signalQuality = -1;
 	unsigned long lastActionTime = 0;
+	int sendToCom(char* telemetry);
 };
