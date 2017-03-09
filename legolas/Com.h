@@ -12,7 +12,7 @@
 #include <IridiumSBD.h> 
 
 
-const unsigned long deltaTimeFlightCom = 60000; 
+const unsigned long deltaTimeFlightCom = 10000; 
 const unsigned long deltaTimeGroundCom = 1000000;
 
 class Com:Subsystem {

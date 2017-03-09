@@ -3,7 +3,7 @@
 #define READY       			0x82
 #define TERMINATOR  			0x83
 #define SUCCESS   				0x84
-#define FAILURE					0x85
+#define FAILURE                 0x85
 
 #define IRIDIUM_OKAY			0
 #define IRIDIUM_INACTIVE		1
@@ -15,7 +15,7 @@
 
 SoftwareSerial nssMFC(8, 9);
 SoftwareSerial nssIridium(10, 11);
-IridiumSBD isbd(nssIridium, 10);
+IridiumSBD isbd(nssIridium, 7);
 
 int iridiumStatus = IRIDIUM_INACTIVE;
 
@@ -68,13 +68,15 @@ void loop() {
 	while (!newString) {
 		byte currByte = nssMFC.read();
 		if (currByte != -1) {
+      Serial.println(currByte);
 			if (currByte == HELLO) { //okay for MFC send
 				nssMFC.write(READY);
 				Serial.println("Com starting");
 			}
 			else if (currByte == TERMINATOR) { //done, prepare for new string
-				Serial.write(rcvdString);
-				iridiumTransmit(rcvdString);
+				//iridiumTransmit(rcvdString);
+                Serial.print("Telemetry message succesfully recieved: ");
+                Serial.print(rcvdString);
 				if (iridiumStatus == IRIDIUM_OKAY) {
 					nssMFC.write(SUCCESS);
 				}
@@ -92,7 +94,7 @@ void loop() {
 				newString = true; //reset interaction
 			}
 			else { //get the message
-				rcvdString[rcvdIndex] = currByte();
+				rcvdString[rcvdIndex] = currByte;
 				rcvdIndex += 1;
 			}
 		}

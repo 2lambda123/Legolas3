@@ -51,6 +51,8 @@ int Com::sendToCom(char* telemetry) {
     Serial1.write(HELLO);
 
     while (true) { //!!! DANGER DANGER VERY SCARY BAD CHANGE THIS SOON
+        Serial.println("loooping in switch");
+        Serial.println(Serial1.read());
         switch (Serial1.read()) {
             case READY:
                 Serial1.write(telemetry);
