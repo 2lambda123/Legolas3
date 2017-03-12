@@ -64,11 +64,12 @@ void loop() {
 	char rcvdString[340];
 	unsigned int rcvdIndex = 0;
 	bool newString = false; //true for string reset
-
+ 
 	while (!newString) {
-		byte currByte = nssMFC.read();
+		int currByte = nssMFC.read();
+    	Serial.println(currByte);
 		if (currByte != -1) {
-      Serial.println(currByte);
+    
 			if (currByte == HELLO) { //okay for MFC send
 				nssMFC.write(READY);
 				Serial.println("Com starting");

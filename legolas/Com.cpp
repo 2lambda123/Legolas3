@@ -1,7 +1,7 @@
 #include "Com.h"
 
 void Com::init () {
-	return;
+    Serial1.begin(115200);
 }
 
 void Com::test() {
@@ -47,7 +47,6 @@ void Com::teardown() {
 }
 
 int Com::sendToCom(char* telemetry) {
-    Serial1.begin(115200);
     Serial1.write(HELLO);
 
     while (true) { //!!! DANGER DANGER VERY SCARY BAD CHANGE THIS SOON
