@@ -4,6 +4,3 @@
 [submodule "libraries/Adafruit_Sensor"]
 	path = libraries/Adafruit_Sensor
 	url = https://github.com/adafruit/Adafruit_Sensor.git
-[submodule "libraries/TinyGPS"]
-	path = libraries/TinyGPS
-	url = https://github.com/mikalhart/TinyGPS.git
