@@ -1,7 +1,7 @@
 #include "Com.h"
 
 void Com::init () {
-    Serial1.begin(115200);
+    Serial1.begin(9600);
 }
 
 void Com::test() {
@@ -27,6 +27,7 @@ void Com::flightProcess(Flightdata& flightdata, unsigned long currTime) {
 		snprintf(telemetry, sizeof(telemetry), "Temp: %s\nPres: %s\nAlt:  %s\nHum:  %s\nBME280: %d\nCom: %d\n", 
 				temp, pres, alt, hum, flightdata.getBme280Status(), flightdata.getComStatus());
 
+        Serial.println(telemetry);
         int success = sendToCom(telemetry);
         if (success == 0) {
             flightdata.setComStatus(0);
@@ -50,15 +51,20 @@ int Com::sendToCom(char* telemetry) {
     Serial1.write(HELLO);
 
     while (true) { //!!! DANGER DANGER VERY SCARY BAD CHANGE THIS SOON
-        Serial.println("loooping in switch");
-        Serial.println(Serial1.read());
-        switch (Serial1.read()) {
+        int serialByte = Serial1.read(); // try an int for now; need the signed capacity
+        switch (serialByte) {
             case READY:
+                Serial.println("Sending...");
                 Serial1.write(telemetry);
+                delay(10);
+                Serial1.write(TERMINATOR);
+                Serial.println("Finished sending...");
                 break;
             case SUCCESS:
+                Serial.println("Success");
                 return 0;
             case FAILURE:
+                Serial.println("Failure");
                 return 1;
         }
         delay(5);
