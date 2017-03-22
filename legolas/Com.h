@@ -26,4 +26,7 @@ private:
 	int signalQuality = -1;
 	unsigned long lastActionTime = 0;
 	int sendToCom(char* telemetry);
+  void packetWrite(char* telemetry);
+
 };
+

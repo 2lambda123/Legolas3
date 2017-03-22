@@ -68,19 +68,19 @@ void loop() {
 	while (!newString) {
 		int currByte = nssMFC.read();
 		if (currByte != -1) {
-      Serial.print(currByte, HEX);
-      Serial.print(" ");
-      char charByte = currByte;
-      Serial.println(charByte);
+      		Serial.print(currByte, HEX);
+      		Serial.print(" ");
+      		char charByte = currByte;
+      		Serial.println(charByte);
 			if (currByte == HELLO) { //okay for MFC send
 				nssMFC.write(READY);
 				Serial.println("Com starting");
 			}
 			else if (currByte == TERMINATOR) { //done, prepare for new string
-        rcvdString[rcvdIndex] = 0; //null terminator
+        		rcvdString[rcvdIndex] = 0; //null terminator
 				//iridiumTransmit(rcvdString);
-        Serial.println("Telemetry message succesfully recieved: ");
-        Serial.print(rcvdString);
+        		Serial.println("Telemetry message succesfully recieved: ");
+        		Serial.print(rcvdString);
 				if (iridiumStatus == IRIDIUM_OKAY) {
 					nssMFC.write(SUCCESS);
 				}
@@ -102,7 +102,6 @@ void loop() {
 				rcvdIndex += 1;
 			}
 		}
-		delay(5);
 	}
 }
 

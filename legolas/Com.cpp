@@ -47,16 +47,14 @@ void Com::teardown() {
 	return;
 }
 
-int Com::sendToCom(char* telemetry) {
+int Com::sendToCom(char *telemetry) {
     Serial1.write(HELLO);
-
     while (true) { //!!! DANGER DANGER VERY SCARY BAD CHANGE THIS SOON
         int serialByte = Serial1.read(); // try an int for now; need the signed capacity
         switch (serialByte) {
             case READY:
                 Serial.println("Sending...");
-                Serial1.write(telemetry);
-                delay(10);
+                packetWrite(telemetry);
                 Serial1.write(TERMINATOR);
                 Serial.println("Finished sending...");
                 break;
@@ -69,5 +67,21 @@ int Com::sendToCom(char* telemetry) {
         }
         delay(5);
     }
+}
 
+
+void Com::packetWrite(char* telemetry) {
+    int telemLength = strlen(telemetry);
+    int numPackets = telemLength / 50 + 1; //problem if divides % 0
+    int telemetryIndex = 0;
+    for (int i = 0; i < numPackets; i++) {
+        char currPacket[51];
+        int j;
+        for (j = 0; j < 50 && (telemetryIndex < telemLength); j++) {
+            currPacket[j] = telemetry[telemetryIndex];
+            telemetryIndex++;
+        }
+        currPacket[j] = '\0'; //terminator
+        Serial1.write(currPacket);
+    }
 }
