@@ -17,15 +17,13 @@ void setup() {
 }
 
 void loop() {
-	unsigned long currTime = millis();
-
 	if (!flightdata.isOnGround()) {
-		bme280.flightProcess(flightdata, currTime);
-   	    com.flightProcess(flightdata, currTime); //DANGER, THIS SENDS A MESSAGE!
+		bme280.flightProcess(flightdata, millis());
+   	    com.flightProcess(flightdata, millis()); //DANGER, THIS SENDS A MESSAGE!
 //        gps.groundProcess();
 	}
 	else {
-		bme280.groundProcess(flightdata, currTime);
+		bme280.groundProcess(flightdata, millis());
 		com.groundProcess();
 //        gps.groundProcess();
 	}

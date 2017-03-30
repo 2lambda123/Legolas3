@@ -14,12 +14,12 @@
 #include <IridiumSBD.h>
 
 SoftwareSerial nssMFC(8, 9);
-//SoftwareSerial nssIridium(10, 11);
-//IridiumSBD isbd(nssIridium, 7);
+SoftwareSerial nssIridium(10, 11);
+IridiumSBD isbd(nssIridium, 7);
 
 int iridiumStatus = IRIDIUM_INACTIVE;
 
-/*void iridiumTransmit(char* telemetry) {
+void iridiumTransmit(char* telemetry) {
 	int signalQuality = -1;
 	//isbd.begin();
 	iridiumStatus = IRIDIUM_OKAY;
@@ -46,17 +46,17 @@ int iridiumStatus = IRIDIUM_INACTIVE;
 
 	Serial.println("Iridium send success!");
 	isbd.sleep();
-}*/
+}
 
 void setup() {
 	Serial.begin(9600); //for debug
 	nssMFC.begin(9600); //talk to MFC
-	//nssIridium.begin(19200); //talk to RockBlock
+	nssIridium.begin(19200); //talk to RockBlock
 
 	//configure Rockblock
-	//isbd.attachConsole(Serial);
-	//isbd.setPowerProfile(1);
-	//isbd.setMinimumSignalQuality(1);
+	isbd.attachConsole(Serial);
+	isbd.setPowerProfile(1);
+	isbd.setMinimumSignalQuality(1);
 
 }
 
@@ -64,21 +64,21 @@ void loop() {
 	char rcvdString[340];
 	unsigned int rcvdIndex = 0;
 	bool newString = false; //true for string reset
+	nssMFC.listen();
  
 	while (!newString) {
 		int currByte = nssMFC.read();
 		if (currByte != -1) {
-      		Serial.print(currByte, HEX);
-      		Serial.print(" ");
-      		char charByte = currByte;
-      		Serial.println(charByte);
-			if (currByte == HELLO) { //okay for MFC send
+		  if (currByte == HELLO) { //okay for MFC send
 				nssMFC.write(READY);
 				Serial.println("Com starting");
+				newString = true;
 			}
 			else if (currByte == TERMINATOR) { //done, prepare for new string
         		rcvdString[rcvdIndex] = 0; //null terminator
-				//iridiumTransmit(rcvdString);
+        		nssIridium.listen();
+				iridiumTransmit(rcvdString);
+				nssMFC.listen();
         		Serial.println("Telemetry message succesfully recieved: ");
         		Serial.print(rcvdString);
 				if (iridiumStatus == IRIDIUM_OKAY) {
