@@ -9,7 +9,7 @@ void Com::test() {
 }
 
 void Com::flightProcess(Flightdata& flightdata, unsigned long currTime) {
-	if ((lastActionTime + deltaTimeFlightCom) <= currTime) { 
+	if ((lastActionTime + deltaTimeFlightCom) <= currTime) {
 		lastActionTime = currTime;
 
 		//cast flightdata to string here because arduino sprintf doesn't work for floats/longs
@@ -24,7 +24,7 @@ void Com::flightProcess(Flightdata& flightdata, unsigned long currTime) {
 
 		//combined flight data buffer sizes must be less then total telemetry buffer size
 		char telemetry[340]; //max Iridium send size
-		snprintf(telemetry, sizeof(telemetry), "Temp: %s\nPres: %s\nAlt:  %s\nHum:  %s\nBME280: %d\nCom: %d\n", 
+		snprintf(telemetry, sizeof(telemetry), "Temp: %s\nPres: %s\nAlt:  %s\nHum:  %s\nBME280: %d\nCom: %d\n",
 				temp, pres, alt, hum, flightdata.getBme280Status(), flightdata.getComStatus());
 
         Serial.println(telemetry);
@@ -49,7 +49,9 @@ void Com::teardown() {
 
 int Com::sendToCom(char *telemetry) {
     Serial1.write(HELLO);
-    while (true) { //!!! DANGER DANGER VERY SCARY BAD CHANGE THIS SOON
+    int startTime = millis();
+    const int kTimeout = 500;
+    while (millis() < startTime + kTimeout) {
         int serialByte = Serial1.read(); // try an int for now; need the signed capacity
         switch (serialByte) {
             case READY:
@@ -67,6 +69,8 @@ int Com::sendToCom(char *telemetry) {
         }
         delay(5);
     }
+    Serial.println("Timeout error");
+    return 1;  // Timeout error
 }
 
 
