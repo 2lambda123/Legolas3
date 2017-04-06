@@ -9,8 +9,6 @@
 
 #include "Subsystem.h"
 #include "Flightdata.h"
-#include <IridiumSBD.h> 
-
 
 const unsigned long deltaTimeFlightCom = 10000; 
 const unsigned long deltaTimeGroundCom = 1000000;
@@ -26,7 +24,7 @@ private:
 	int signalQuality = -1;
 	unsigned long lastActionTime = 0;
 	int sendToCom(char* telemetry);
-  void packetWrite(char* telemetry);
+	void packetWrite(char* telemetry);
 
 };
 

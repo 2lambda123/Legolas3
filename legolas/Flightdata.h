@@ -3,6 +3,10 @@
 #define OKAY			0
 #define ERR_GENERAL		1
 
+/*#include <stdlib.h>
+#include <stdio.h>*/
+#include <IridiumSBD.h> //!!stdio seems to break serial, isbd works in the interim
+
 class Flightdata {
 public:
 	//////////SENSOR DATA//////////
@@ -18,6 +22,9 @@ public:
 	float getHum() {
 		return fHum;
 	}
+	float getVolt() {
+		return fVolt;
+	}
 
 	void setTemp(float temp) {
 		fTemp = temp;
@@ -31,25 +38,46 @@ public:
 	void setHum(float hum) {
 		fHum = hum;
 	}
+	void setVolt(float volt) {
+		fVolt = volt;
+	}
 
-	//////////SYSTEM STATE//////////
+	//////////UTILITIES//////////
 	bool isOnGround() {
 		return false;
 		//!!! add logic later, maybe it makes sense to have an isOnGround bool that is periodically
 		//updated rather than going through the logic each iteration. Is on ground can be checked once
 		//every 10 seconds or so
 	}
+	char getStrFlightdata() {
+		static char temp[15];
+		static char pres[15];
+		static char alt[15];
+		static char hum[15];
+		static char volt[15];
+		dtostrf(fTemp, 9, 2, temp);
+		dtostrf(fPres, 9, 2, pres);
+		dtostrf(fAlt, 9, 2, alt);
+		dtostrf(fHum, 9, 2, hum);
+		dtostrf(fVolt, 9, 2, volt);
+
+        char flightdata[340]; //max Iridium send size
+        snprintf(flightdata, sizeof(flightdata), "Temp: %s\nPres: %s\nAlt:  %s\nHum:  %s\nVolt: %s\nBME280: %d\nCom: %d\n",
+                temp, pres, alt, hum, volt, bme280Status, comStatus);
+
+        return flightdata;
+	}
 
 	//////////SUBSYSTEM STATUS//////////
 	int getBme280Status() {
-		return Bme280Status;
+		return bme280Status;
 	}
 	int getComStatus() {
 		return comStatus;
 	}
 
 	void setBme280Status(int status) {
-		Bme280Status = status;
+		bme280Status = status;
 	}
 	int setComStatus(int status) {
 		comStatus = status;
@@ -60,8 +88,9 @@ private:
 	float fPres = 0;
 	float fAlt = 0;
 	float fHum = 0;
+	float fVolt = 0;
 
 	//////////SUBSYSTEM STATUS//////////
-	int Bme280Status = 0;
+	int bme280Status = 0;
 	int comStatus = 0;
 };

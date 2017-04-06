@@ -21,7 +21,7 @@ int iridiumStatus = IRIDIUM_INACTIVE;
 
 void iridiumTransmit(char* telemetry) {
 	int signalQuality = -1;
-	//isbd.begin();
+	isbd.begin();
 	iridiumStatus = IRIDIUM_OKAY;
 
 	//establish signal
@@ -57,6 +57,7 @@ void setup() {
 	isbd.attachConsole(Serial);
 	isbd.setPowerProfile(1);
 	isbd.setMinimumSignalQuality(1);
+	isbd.adjustSendReceiveTimeout(60);
 
 }
 
