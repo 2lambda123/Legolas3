@@ -49,7 +49,7 @@ public:
 		//updated rather than going through the logic each iteration. Is on ground can be checked once
 		//every 10 seconds or so
 	}
-	char getStrFlightdata() {
+	char* getStrFlightdata() {
 		static char temp[15];
 		static char pres[15];
 		static char alt[15];

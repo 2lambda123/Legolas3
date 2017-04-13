@@ -11,9 +11,10 @@ void Com::test() {
 void Com::flightProcess(Flightdata& flightdata, unsigned long currTime) {
 	if ((lastActionTime + deltaTimeFlightCom) <= currTime) {
 		lastActionTime = currTime;
-		
-        char telemetry = flightdata.getStrFlightdata();
-        
+
+        char telemetry[340];
+        strcpy(telemetry, flightdata.getStrFlightdata());
+
         Serial.println(telemetry);
         int success = sendToCom(telemetry);
         if (success == 0) {
