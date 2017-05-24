@@ -13,14 +13,14 @@ void setup() {
 	Serial.begin(9600);
 	bme280.init();
 	com.init();
-//  gps.init();
+	gps.init();
 }
 
 void loop() {
 	if (!flightdata.isOnGround()) {
 		bme280.flightProcess(flightdata, millis());
    	    com.flightProcess(flightdata, millis()); //DANGER, THIS SENDS A MESSAGE!
-//        gps.groundProcess();
+        gps.groundProcess(flightdata, millis());
 	}
 	else {
 		bme280.groundProcess(flightdata, millis());

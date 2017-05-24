@@ -13,3 +13,6 @@
 [submodule "libraries/Adafruit_INA219"]
 	path = libraries/Adafruit_INA219
 	url = https://github.com/adafruit/Adafruit_INA219.git
+[submodule "libraries/Adafruit_10DOF"]
+	path = libraries/Adafruit_10DOF
+	url = https://github.com/adafruit/Adafruit_10DOF.git

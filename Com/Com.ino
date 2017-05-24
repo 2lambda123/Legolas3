@@ -55,7 +55,7 @@ void setup() {
 
 	//configure Rockblock
 	isbd.attachConsole(Serial);
-	isbd.setPowerProfile(1);
+	//isbd.setPowerProfile(1);
 	isbd.setMinimumSignalQuality(1);
 	isbd.adjustSendReceiveTimeout(60);
 
