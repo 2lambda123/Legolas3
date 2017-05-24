@@ -1,11 +1,11 @@
 #include "Gps.h"
 
-SoftwareSerial mySerial(10, 11); // RX, TX 
+SoftwareSerial mySerial(10, 11); // RX, TX
 //how to set stuff with input outside a func?
 
 void Gps::init(int rx, int tx) {
-	gpsSerial = new SoftwareSerial(rx, tx)
-	gpsSerial.begin(9600);
+	gpsSerial = new SoftwareSerial(rx, tx);
+	gpsSerial->begin(9600);
 	setupGPS();
 	Serial.println("GPS initialized.");
     return;
@@ -16,7 +16,7 @@ void Gps::test() {
 }
 
 void Gps::flightProcess(Flightdata &flightdata, unsigned long currTime) {
-    if ((lastActionTime + deltaTimeFlightCom) <= currTime) {
+    if ((lastActionTime + deltaTimeFlightGps) <= currTime) {
 		lastActionTime = currTime;
 
 	Serial.println("Calling check_nav");
@@ -58,14 +58,14 @@ void Gps::teardown() {
 }
 
 // Send a byte array of UBX protocol to the GPS
-void GPS::sendUBX(uint8_t *MSG, uint8_t len) {
+void Gps::sendUBX(uint8_t *MSG, uint8_t len) {
 	for(int i=0; i<len; i++) {
 		mySerial.write(MSG[i]);
 	}
 	//mySerial.println();
 }
 
-uint16_t GPS::gps_CRC16_checksum (char *string)
+uint16_t Gps::gps_CRC16_checksum (char *string)
 {
 	size_t i;
 	uint16_t crc;
@@ -83,7 +83,7 @@ uint16_t GPS::gps_CRC16_checksum (char *string)
 	return crc;
 }
 
-void GPS::setupGPS() {
+void Gps::setupGPS() {
 	//Turning off all GPS NMEA strings apart on the uBlox module
 	mySerial.println("$PUBX,40,GLL,0,0,0,0*5C");
 	delay(100);
@@ -104,14 +104,14 @@ void GPS::setupGPS() {
 
 }
 
-void GPS::PSMgps(){
+void Gps::PSMgps(){
 	 setupGPS();
 	 //set GPS to Eco mode (reduces current by 4mA)
 	 uint8_t setEco[] = {0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x00, 0x04, 0x1D, 0x85};
 	 sendUBX(setEco, sizeof(setEco)/sizeof(uint8_t));
 }
 
-void GPS::gpsPower(int i){
+void Gps::gpsPower(int i){
 	if(i == 0){
 		//turn off GPS
 		//  uint8_t GPSoff[] = {0xB5, 0x62, 0x02, 0x41, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x4D, 0x3B};
@@ -130,7 +130,7 @@ void GPS::gpsPower(int i){
 	}
 }
 
-void GPS::gps_ubx_checksum(uint8_t* data, uint8_t len, uint8_t* cka,
+void Gps::gps_ubx_checksum(uint8_t* data, uint8_t len, uint8_t* cka,
 				uint8_t* ckb)
 {
 		*cka = 0;
@@ -143,7 +143,7 @@ void GPS::gps_ubx_checksum(uint8_t* data, uint8_t len, uint8_t* cka,
 		}
 }
 
-bool GPS::_gps_verify_checksum(uint8_t* data, uint8_t len)
+bool Gps::_gps_verify_checksum(uint8_t* data, uint8_t len)
 {
 		uint8_t a, b;
 		gps_ubx_checksum(data, len, &a, &b);
@@ -156,7 +156,7 @@ bool GPS::_gps_verify_checksum(uint8_t* data, uint8_t len)
 /**
  * Get data from GPS, times out after 1 second.
  */
-void GPS::gps_get_data()
+void Gps::gps_get_data()
 {
 		int i = 0;
 		unsigned long startTime = millis();
@@ -179,7 +179,7 @@ void GPS::gps_get_data()
  * Check the navigation status to determine the quality of the
  * fix currently held by the receiver with a NAV-STATUS message.
  */
-void GPS::gps_check_lock()
+void Gps::gps_check_lock()
 {
 		GPSerror = 0;
 		mySerial.flush();
@@ -221,7 +221,7 @@ void GPS::gps_check_lock()
  * Poll the GPS for a position message then extract the useful
  * information from it - POSLLH.
  */
-void GPS::gps_get_position()
+void Gps::gps_get_position()
 {
 		GPSerror = 0;
 		mySerial.flush();
@@ -266,7 +266,7 @@ void GPS::gps_get_position()
  * Get the hour, minute and second from the GPS using the NAV-TIMEUTC
  * message.
  */
-void GPS::gps_get_time()
+void Gps::gps_get_time()
 {
 		GPSerror = 0;
 		mySerial.flush();
@@ -305,7 +305,7 @@ void GPS::gps_get_time()
  * Verify that the uBlox 6 GPS receiver is set to the <1g airborne
  * navigaion mode.
  */
-uint8_t GPS::gps_check_nav(void)
+uint8_t Gps::gps_check_nav(void)
 {
 		uint8_t request[8] = {0xB5, 0x62, 0x06, 0x24, 0x00, 0x00,
 				0x2A, 0x84};

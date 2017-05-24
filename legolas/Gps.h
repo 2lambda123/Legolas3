@@ -7,7 +7,7 @@
 #include <util/crc16.h>
 #include <SoftwareSerial.h>
 
-const unsigned long deltaTimeFlightCom = 10000; 
+const unsigned long deltaTimeFlightGps = 10000; 
 
 class Gps:Subsystem {
     public:
