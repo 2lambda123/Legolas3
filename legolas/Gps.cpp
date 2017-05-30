@@ -1,6 +1,5 @@
 #include "Gps.h"
 
-SoftwareSerial mySerial(10, 11); // RX, TX
 //how to set stuff with input outside a func?
 
 void Gps::init(int rx, int tx) {
@@ -60,9 +59,9 @@ void Gps::teardown() {
 // Send a byte array of UBX protocol to the GPS
 void Gps::sendUBX(uint8_t *MSG, uint8_t len) {
 	for(int i=0; i<len; i++) {
-		mySerial.write(MSG[i]);
+		gpsSerial->write(MSG[i]);
 	}
-	//mySerial.println();
+	//gpsSerial.println();
 }
 
 uint16_t Gps::gps_CRC16_checksum (char *string)
@@ -85,17 +84,17 @@ uint16_t Gps::gps_CRC16_checksum (char *string)
 
 void Gps::setupGPS() {
 	//Turning off all GPS NMEA strings apart on the uBlox module
-	mySerial.println("$PUBX,40,GLL,0,0,0,0*5C");
+	gpsSerial->println("$PUBX,40,GLL,0,0,0,0*5C");
 	delay(100);
-	mySerial.println("$PUBX,40,GGA,0,0,0,0*5A");
+	gpsSerial->println("$PUBX,40,GGA,0,0,0,0*5A");
 	delay(100);
-	mySerial.println("$PUBX,40,GSA,0,0,0,0*4E");
+	gpsSerial->println("$PUBX,40,GSA,0,0,0,0*4E");
 	delay(100);
-	mySerial.println("$PUBX,40,RMC,0,0,0,0*47");
+	gpsSerial->println("$PUBX,40,RMC,0,0,0,0*47");
 	delay(100);
-	mySerial.println("$PUBX,40,GSV,0,0,0,0*59");
+	gpsSerial->println("$PUBX,40,GSV,0,0,0,0*59");
 	delay(100);
-	mySerial.println("$PUBX,40,VTG,0,0,0,0*5E");
+	gpsSerial->println("$PUBX,40,VTG,0,0,0,0*5E");
 	delay(3000); // Wait for the GPS to process all the previous commands
 
 	// Check and set the navigation mode (Airborne, 1G)
@@ -160,12 +159,11 @@ void Gps::gps_get_data()
 {
 		int i = 0;
 		unsigned long startTime = millis();
-		mySerial.listen();
+		gpsSerial->listen();
 		while (1) {
 		// Make sure data is available to read
-		if (mySerial.available()) {
-			buf[i] = mySerial.read();
-			Serial.println(i);
+		if (gpsSerial->available()) {
+			buf[i] = gpsSerial->read();
 			i++;
 		}
 		// Timeout if no valid response in 1 seconds
@@ -182,7 +180,7 @@ void Gps::gps_get_data()
 void Gps::gps_check_lock()
 {
 		GPSerror = 0;
-		mySerial.flush();
+		gpsSerial->flush();
 		// Construct the request to the GPS
 		uint8_t request[8] = {0xB5, 0x62, 0x01, 0x06, 0x00, 0x00,
 				0x07, 0x16};
@@ -224,7 +222,7 @@ void Gps::gps_check_lock()
 void Gps::gps_get_position()
 {
 		GPSerror = 0;
-		mySerial.flush();
+		gpsSerial->flush();
 		// Request a NAV-POSLLH message from the GPS
 		uint8_t request[8] = {0xB5, 0x62, 0x01, 0x02, 0x00, 0x00, 0x03,
 				0x0A};
@@ -259,6 +257,12 @@ void Gps::gps_get_position()
 					(int32_t)buf[24] << 16 | (int32_t)buf[25] << 24;
 			alt /= 1000;
 		}
+		Serial.print("GPS lat: ");
+		Serial.println(lat);
+		Serial.print("GPS lon: ");
+		Serial.println(lon);
+		Serial.print("GPS alt (m): ");
+		Serial.println(alt);
 
 }
 
@@ -269,7 +273,7 @@ void Gps::gps_get_position()
 void Gps::gps_get_time()
 {
 		GPSerror = 0;
-		mySerial.flush();
+		gpsSerial->flush();
 		// Send a NAV-TIMEUTC message to the receiver
 		uint8_t request[8] = {0xB5, 0x62, 0x01, 0x21, 0x00, 0x00,
 				0x22, 0x67};
@@ -299,6 +303,12 @@ void Gps::gps_get_time()
 				second = buf[24];
 			}
 		}
+		Serial.print("GPS time: ");
+		Serial.print(hour);
+		Serial.print(":");
+		Serial.print(minute);
+		Serial.print(":");
+		Serial.print(second);
 }
 
 /**
