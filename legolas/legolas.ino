@@ -2,6 +2,7 @@
 #include "Bme280.h"
 #include "Com.h"
 #include "Gps.h"
+#include "System.h"
 
 Flightdata flightdata;
 
@@ -11,9 +12,11 @@ const int kGpsTxPin = 11;
 Bme280 bme280;
 Com com;
 Gps gps;
+System system;
 
 void setup() {
 	Serial.begin(9600);
+	System.init(flightdata);
 	bme280.init();
 	com.init();
 	gps.init(kGpsRxPin, kGpsTxPin);

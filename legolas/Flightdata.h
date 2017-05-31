@@ -67,6 +67,15 @@ public:
 
         return flightdata;
 	}
+	void log() {
+		logFile = SD.open("log.csv", FILE_WRITE);
+		logFile.println("new1, new2, new3, new4");
+		logFile.close();
+
+	}
+	void log(char* data){
+		return;
+	}
 
 	//////////SUBSYSTEM STATUS//////////
 	int getBme280Status() {
