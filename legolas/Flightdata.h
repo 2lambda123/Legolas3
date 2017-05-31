@@ -6,6 +6,7 @@
 /*#include <stdlib.h>
 #include <stdio.h>*/
 #include <IridiumSBD.h> //!!stdio seems to break serial, isbd works in the interim
+#include <SD.h>
 
 class Flightdata {
 public:
@@ -67,14 +68,24 @@ public:
 
         return flightdata;
 	}
+
+   void logInit(int pin) {
+      SD.begin(pin);
+      File logFile = SD.open("log.csv", FILE_WRITE);
+      logFile.println("head1, head2, head3, head4");
+      logFile.close();
+   }
+
 	void log() {
-		logFile = SD.open("log.csv", FILE_WRITE);
+		File logFile = SD.open("log.csv", FILE_WRITE);
 		logFile.println("new1, new2, new3, new4");
 		logFile.close();
 
 	}
 	void log(char* data){
-		return;
+      File logFile = SD.open("log.csv", FILE_WRITE);
+      logFile.println(data);
+      logFile.close();
 	}
 
 	//////////SUBSYSTEM STATUS//////////

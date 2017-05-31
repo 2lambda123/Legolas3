@@ -40,7 +40,8 @@ void Gps::flightProcess(Flightdata &flightdata, unsigned long currTime) {
 
 
 	//battV = analogRead(2);
-	// n=sprintf (superbuffer, "$$EURUS,%d,%02d:%02d:%02d,%ld,%ld,%ld,%d,%d,%d,%d", count, hour, minute, second, lat, lon, alt, sats, lock, battV, navmode);
+   // n=sprintf (superbuffer, "$$EURUS,%d,%02d:%02d:%02d,%ld,%ld,%ld,%d,%d,%d,%d", count, hour, minute, second, lat, lon, alt, sats, lock, battV, navmode);
+   sprintf (superbuffer, "$$EURUS,%d,%02d:%02d:%02d,%ld,%ld,%ld,%d,%d,%d,%d", count, hour, minute, second, lat, lon, alt, sats, lock, battV, navmode);
 	// n = sprintf (superbuffer, "%s*%04X\n", superbuffer, gps_CRC16_checksum(superbuffer));
 
 	// Serial.println(superbuffer);

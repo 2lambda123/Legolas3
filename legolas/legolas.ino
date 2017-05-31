@@ -12,11 +12,11 @@ const int kGpsTxPin = 11;
 Bme280 bme280;
 Com com;
 Gps gps;
-System system;
+System mySystem;
 
 void setup() {
 	Serial.begin(9600);
-	System.init(flightdata);
+	mySystem.init(flightdata);
 	bme280.init();
 	com.init();
 	gps.init(kGpsRxPin, kGpsTxPin);

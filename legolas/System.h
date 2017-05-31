@@ -1,15 +1,15 @@
 #pragma once
 
 #include "Subsystem.h"
-#include "Flightdata.h" 
+#include "Flightdata.h"
 #include <Adafruit_INA219.h>
 
-const unsigned long deltaTimeFlightSystem = 1000; 
+const unsigned long deltaTimeFlightSystem = 1000;
 const unsigned long deltaTimeGroundSystem = 1000;
 
 class System:Subsystem {
 public:
-	void init();
+	void init(Flightdata& flightdata);
 	void test();
 	void flightProcess(Flightdata& flightdata, unsigned long currTime);
 	void groundProcess();
