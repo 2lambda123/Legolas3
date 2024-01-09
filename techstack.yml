@@ -1,0 +1,31 @@
+repo_name: 2lambda123/Legolas3
+report_id: 01d866c7cca81be67fe36205a3d57fa2
+version: 0.1
+repo_type: Public
+timestamp: '2024-01-09T07:56:09+00:00'
+requested_by: elektrux
+provider: github
+branch: master
+detected_tools_count: 2
+tools:
+- name: C++
+  description: Has imperative, object-oriented and generic programming features, while
+    also providing the facilities for low level memory manipulation
+  website_url: http://www.cplusplus.com/
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/1049/cplusplus.png
+  detection_source_url: https://github.com/2lambda123/Legolas3
+  detection_source: Repo Metadata
+- name: Git
+  description: Fast, scalable, distributed revision control system
+  website_url: http://git-scm.com/
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Version Control System
+  image_url: https://img.stackshare.io/service/1046/git.png
+  detection_source_url: https://github.com/2lambda123/Legolas3
+  detection_source: Repo Metadata
